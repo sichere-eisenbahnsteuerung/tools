@@ -1,6 +1,11 @@
 #include "configurationwidget.h"
 #include "ui_configurationwidget.h"
 
+
+/** @brief  Konstruktor der Klasse
+  *
+  * @todo   Implementieren
+  */
 ConfigurationWidget::ConfigurationWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ConfigurationWidget)
@@ -8,6 +13,9 @@ ConfigurationWidget::ConfigurationWidget(QWidget *parent) :
     ui->setupUi(this);
 }
 
+
+/** @brief  Destruktor der Klasse
+  */
 ConfigurationWidget::~ConfigurationWidget()
 {
     delete ui;
@@ -27,8 +35,10 @@ ConfigurationWidget::~ConfigurationWidget()
   */
 int ConfigurationWidget::configure_config_widget(QString filename)
 {
+    /*
     this->filename = filename;
     settings = new QSettings(filename,QSettings::IniFormat,this);
+    */
     return SUCCESS;
 }
 
@@ -43,6 +53,7 @@ int ConfigurationWidget::configure_config_widget(QString filename)
   */
 int ConfigurationWidget::settings_load()
 {
+    /*
     settings->sync();
     settings->beginGroup("Allgemein");
 
@@ -77,7 +88,7 @@ int ConfigurationWidget::settings_load()
     ui->log_check_timestamp->setChecked(settings->value("timestamp", "true").toBool());
     ui->log_line_namebase->setText(settings->value("namebase").toString());
     settings->endGroup();
-
+*/
     return SUCCESS;
 }
 
@@ -211,19 +222,36 @@ AppConfig ConfigurationWidget::get_config_app()
 
 /////////////////////////SLOTS////////////////////////////////////
 
+/** @brief  Behandelt das drücken des "Accept" Buttons
+  *
+  * @todo   Implementieren
+  * @todo   Sprache anpassen
+  */
 void ConfigurationWidget::accept_button_pressed()
 {
     //saven, und loaden
 }
 
 
-
+/** @brief  Behandelt das drücken des "Cancel" Buttons
+  *
+  * @todo   Implementieren
+  * @todo   Sprache anpassen
+  */
 void ConfigurationWidget::cancel_button_pressed()
 {
     //nur loaden
 }
 
+
 /////////////////////////PROTECTED/////////////////////////////////
+
+/** @brief  Enthält Anweisungen zum neuzeichnen des Moduls
+  *
+  * @param  event   Enthät Daten über das event.
+  *
+  * @todo   Implementieren
+  */
 void ConfigurationWidget::paintEvent( QPaintEvent *event )
 {
     setMinimumSize(parentWidget()->size());
