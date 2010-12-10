@@ -1,13 +1,24 @@
 #include "interpreter.h"
 
+/** @brief  Konstruktor der Klasse
+  *
+  * @todo   Implementieren
+  */
 Interpreter::Interpreter(QObject *parent) :
     QObject(parent)
 {
     initialized = false;
     running = false;
-    in_queue.clear();
+    //in_queue.clear();
 }
 
+
+/** @brief  Setzt eine Neue Konfiguration für das Modul
+  *
+  * @param  config  Neue Konfiguration
+  *
+  * @todo   Implementieren
+  */
 int Interpreter::configure_interpreter(InterpreterConfig config)
 {
     if(running)
@@ -22,6 +33,11 @@ int Interpreter::configure_interpreter(InterpreterConfig config)
     }
 }
 
+
+/** @brief  Initialisiert das Modul mit der aktuellen Konfiguration
+  *
+  * @todo   Implementieren
+  */
 int Interpreter::initialize_interpreter()
 {
     if(running)
@@ -30,12 +46,17 @@ int Interpreter::initialize_interpreter()
     }
     else
     {
-        in_queue.clear();
+        //in_queue.clear();
         initialized = true;
         return SUCCESS;
     }
 }
 
+
+/** @brief  Startet das Modul
+  *
+  * @todo   Implementieren
+  */
 int Interpreter::start_interpreter()
 {
     if(initialized)
@@ -49,12 +70,17 @@ int Interpreter::start_interpreter()
     }
 }
 
+
+/** @brief  Beendet das Modul kontrolliert.
+  *
+  * @todo   Implementieren
+  */
 int Interpreter::stop_interpreter()
 {
     if(running)
     {
         running = false;
-        in_queue.clear();
+        //in_queue.clear();
         return SUCCESS;
     }
     else
@@ -63,14 +89,28 @@ int Interpreter::stop_interpreter()
     }
 }
 
+
+/** @brief  Sammelt eingehende Rohdaten und stößt interpretation an
+  *
+  * @param  data    Rohdaten die zu interpretieren sind.
+  *
+  * @todo   Implementieren
+  */
 int Interpreter::add_incoming_data(QByteArray data)
 {
-    in_queue.append(data);
+    //in_queue.append(data);
 
     //TODO
     return SUCCESS;
 }
 
+
+/** @brief  Kodiert eine Nachricht zum senden über die Serielle Schnittstelle
+  *
+  * @param  message     Zu kodierende Nachricht
+  *
+  * @todo   Implementieren
+  */
 int Interpreter::encode_outgoing_message(QString message)
 {
     //TODO
