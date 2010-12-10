@@ -1,6 +1,11 @@
 #include "consolewidget.h"
 #include "ui_consolewidget.h"
 
+
+/** @brief  Konstruktor der Klasse
+  *
+  * @todo   Implementieren
+  */
 ConsoleWidget::ConsoleWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ConsoleWidget)
@@ -13,19 +18,18 @@ ConsoleWidget::ConsoleWidget(QWidget *parent) :
     connect(ui->send_button, SIGNAL(clicked()), this, SLOT(send_button_pressed()));
 }
 
+/** @brief  Destruktor der Klasse
+  */
 ConsoleWidget::~ConsoleWidget()
 {
     delete ui;
 }
 
 
-void ConsoleWidget::paintEvent( QPaintEvent *event )
-{
-    setMinimumSize(parentWidget()->size());
-    setMaximumSize(parentWidget()->size());
-    event->accept();
-}
-
+/** @brief  Startet das initialisierte Modul
+  *
+  * @todo   Implementieren
+  */
 int ConsoleWidget::start_console()
 {
     if(initialized)
@@ -38,6 +42,11 @@ int ConsoleWidget::start_console()
         return FAILURE;
     }
 }
+/** @brief  Stoppt das Modul
+  *
+  * @todo   Implementieren
+  */
+
 
 int ConsoleWidget::stop_console()
 {
@@ -52,6 +61,11 @@ int ConsoleWidget::stop_console()
     }
 }
 
+
+/** @brief  Initialisiert das Modul
+  *
+  * @todo   Implementieren
+  */
 int ConsoleWidget::initialize_console()
 {
     if(running)
@@ -66,6 +80,13 @@ int ConsoleWidget::initialize_console()
     }
 }
 
+
+/** @brief  Konfiguriert das Modul
+  *
+  * @param  config  Neue Konfiguration
+  *
+  * @todo   Implementieren
+  */
 int ConsoleWidget::configure_console(ConsoleConfig config) //TODO: config noch ungenutzt
 {
     if(running)
@@ -93,6 +114,7 @@ int ConsoleWidget::configure_console(ConsoleConfig config) //TODO: config noch u
   */
 int ConsoleWidget::data_output(QString message, int source, int type)
 {
+    /*
     if(!running)
     {
         return FAILURE;
@@ -134,10 +156,6 @@ int ConsoleWidget::data_output(QString message, int source, int type)
         outMsg.append("ERROR:\t");
         ui->console_text->setTextColor(QColor("red"));
         break;
- /*   case TYPE_STATUS:
-        outMsg.append("Status:\t");
-        ui->console_text->setTextColor(QColor("lime"));
-        break;*/
     default:
         outMsg.append("Unbekannter Meldungstyp: ");
         ui->console_text->setTextColor(QColor("red"));
@@ -153,16 +171,39 @@ int ConsoleWidget::data_output(QString message, int source, int type)
         c.movePosition(QTextCursor::End);
         ui->console_text->setTextCursor(c);
     }
-
+    */
     return SUCCESS;
 }
 
 
+///////////////////////////////SLOTS////////////////////////////////
+
+/** @brief  Behandelt das Drücken des "Senden" Buttons
+  *
+  * @todo   Implementieren
+  */
 void ConsoleWidget::send_button_pressed()
 {
+    /*
     if(running)
     {
         emit outgoing_command(ui->command_line->text());
         ui->command_line->clear();
     }
+    */
+}
+
+//////////////////////////PROTECTED///////////////////////////////////
+
+/** @brief  Enthält Anweisungen zum neuzeichnen des Moduls
+  *
+  * @param  event   Enthät Daten über das event.
+  *
+  * @todo   Implementieren
+  */
+void ConsoleWidget::paintEvent( QPaintEvent *event )
+{
+    setMinimumSize(parentWidget()->size());
+    setMaximumSize(parentWidget()->size());
+    event->accept();
 }
