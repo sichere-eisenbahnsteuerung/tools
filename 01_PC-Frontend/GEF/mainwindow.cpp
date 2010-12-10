@@ -1,6 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+/** @brief  Konstruktor der Klasse.
+  *
+  *
+  */
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -33,13 +37,23 @@ MainWindow::MainWindow(QWidget *parent) :
     initialize_application();
 }
 
+/** @brief  Destruktor der Klasse.
+  *
+  *
+  */
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
 
-//TODO: Fehler abfangen
+/** @brief  Initialisiert alle Module.
+  *
+  * @return SUCCESS Alle Module erfolgreich initialisiert.
+  *         FAILURE Fehler bei mindestens einer Initialisierung.
+  *
+  * @todo   Fehler abfangen
+  */
 int MainWindow::initialize_application()
 {
     this->configuration = configwidget->get_config_app();
@@ -64,7 +78,13 @@ int MainWindow::initialize_application()
 }
 
 
-
+/** @brief  Stoppt alle Module.
+  *
+  * @return SUCCESS Alle Module erfolgreich gestoppt.
+  *         FAILURE Fehler bei mindestens einem Modul.
+  *
+  * @todo   Implementieren
+  */
 int MainWindow::stop_application()
 {
 
@@ -92,7 +112,7 @@ void MainWindow::aktion_verbinden()
 
 
 
-/** @brief  Fordert die serielle Schnittstelle auf sich zu beenden
+/** @brief  Behandlung des "Trennen" Buttons
   *
   */
 void MainWindow::aktion_trennen()
@@ -111,7 +131,14 @@ void MainWindow::aktion_beenden()
 }
 
 
-
+/** @brief  Sammelt alle Status nachrichten der Module
+  *
+  * @param  message     Inhalt der Statusnachricht
+  * @param  source      Sendendes Modul
+  * @param  type        Nachrichtentyp
+  *
+  * @todo   Implementieren
+  */
 void MainWindow::status_message_hub(QString message, int source, int type)
 {
     //je nach verbose an konsole senden
@@ -120,7 +147,10 @@ void MainWindow::status_message_hub(QString message, int source, int type)
 }
 
 
-
+/** @brief  Empfängt die Konsoleneingaben
+  *
+  * @todo   Implementieren
+  */
 void MainWindow::console_receive_data()
 {
     //daten an interpreter senden
@@ -129,7 +159,10 @@ void MainWindow::console_receive_data()
 }
 
 
-
+/** @brief  Empfängt die vom Interpreter fertig dekodierten Nachrichten
+  *
+  * @todo   Implementieren
+  */
 void MainWindow::interpreter_receive_incoming_data()
 {
     //an konsole senden
@@ -138,7 +171,12 @@ void MainWindow::interpreter_receive_incoming_data()
 }
 
 
-
+/** @brief  Empfängt die vom Interpreter fertig kodierten Nachrichten.
+  *
+  * @param  data    Telegramm, bereit zum senden.
+  *
+  * @todo   Implementieren
+  */
 void MainWindow::interpreter_receive_outgoing_data(QByteArray data)
 {
     //an serialinterface senden
@@ -147,7 +185,12 @@ void MainWindow::interpreter_receive_outgoing_data(QByteArray data)
 }
 
 
-
+/** @brief  Sammelt alle Rohdaten der seriellen Schnittstelle
+  *
+  * @param  data    Rohdaten von der seriellen Schnittstelle
+  *
+  * @todo   Implementieren
+  */
 void MainWindow::serial_receive_data(QByteArray data)
 {
     //an interpreter senden
@@ -159,6 +202,12 @@ void MainWindow::serial_receive_data(QByteArray data)
 
 /////////////////////////////PROTECTED////////////////////////////////////
 
+/** @brief  Fängt close events des Hauptfensters ab um kontrolliert beenden zu können.
+  *
+  * @param  event   Enthält Daten zum Event
+  *
+  * @todo   Implementieren
+  */
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     if(ready_to_exit)
@@ -176,6 +225,10 @@ void MainWindow::closeEvent(QCloseEvent *event)
 ///////////////////////////////DEBUG//////////////////////////////////////
 
 #ifdef DEBUG_MODE
+
+/**
+  * @brief  Debug Funktion, Liest Debug-Konsole und leitet Nachricht an die Module weiter.
+  */
 void MainWindow::debug_commandline()
 {
     QString command = ui->debug_command_line->text();
