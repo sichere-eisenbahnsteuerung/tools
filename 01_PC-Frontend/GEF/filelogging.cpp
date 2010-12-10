@@ -1,5 +1,9 @@
 #include "filelogging.h"
 
+/** @brief  Konstruktor der Klasse
+  *
+  * @todo   Implementieren
+  */
 FileLogging::FileLogging(QObject *parent) :
     QObject(parent)
 {
@@ -9,9 +13,17 @@ FileLogging::FileLogging(QObject *parent) :
 }
 
 
-
+/** @brief  Fügt eine Nachricht dem Log an.
+  *
+  * @param  message     Inhalt der Statusnachricht
+  * @param  source      Sendendes Modul
+  * @param  type        Nachrichtentyp
+  *
+  * @todo   Implementieren
+  */
 int FileLogging::log_message(QString message, int source, int type)
 {
+    /*
     if(!running)
     {
         emit status_message("Kein aktives Dateilog", SOURCE_LOGGING, TYPE_ERROR);
@@ -48,9 +60,6 @@ int FileLogging::log_message(QString message, int source, int type)
     case TYPE_ERROR:
         log_entry.append("ERROR:\t");
         break;
- /*   case TYPE_STATUS:
-        log_entry.append("Status:\t");
-        break; */
     default:
         log_entry.append("Unbekannter Meldungstyp: ");
         break;
@@ -62,14 +71,20 @@ int FileLogging::log_message(QString message, int source, int type)
     QTextStream dstream(logfile);
     dstream << log_entry;
 
+    */
+
     return SUCCESS;
 }
 
 
 
-
+/** @brief  Startet das Modul
+  *
+  * @todo   Implementieren
+  */
 int FileLogging::start_log()
 {
+    /*
     if(running)
     {
         emit status_message("Logging läuft bereits", SOURCE_LOGGING, TYPE_ERROR);
@@ -116,13 +131,20 @@ int FileLogging::start_log()
             return FAILURE;
         }
     }
+
+    */
+    return SUCCESS; //dummy
 }
 
 
 
-
+/** @brief  Stoppt das Modul kontrolliert
+  *
+  * @todo   Implementieren
+  */
 int FileLogging::stop_log()
 {
+    /*
     if(!running)
     {
         emit status_message("Kein aktives Dateilog", SOURCE_LOGGING, TYPE_ERROR);
@@ -140,16 +162,15 @@ int FileLogging::stop_log()
         emit status_message("Datei konnte nicht geschlossen werden (Flush fehlgeschlagen)!", SOURCE_LOGGING, TYPE_ERROR);
         return FAILURE;
     }
+    */
+    return SUCCESS; //dummy
 }
 
 
-
-bool FileLogging::is_logging()
-{
-    return running;
-}
-
-
+/** @brief  Initialisiert das Modul mit der aktuellen Konfiguration
+  *
+  * @todo   Implementieren
+  */
 int FileLogging::initialize_log()
 {
     if(running)
@@ -164,6 +185,13 @@ int FileLogging::initialize_log()
     }
 }
 
+
+/** @brief  Konfiguriert das Modul
+  *
+  * @param  config  Neue Konfiguration
+  *
+  * @todo   Implementieren
+  */
 int FileLogging::configure_log(LogConfig config)
 {
     if(running)

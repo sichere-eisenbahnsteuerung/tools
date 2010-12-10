@@ -15,7 +15,6 @@ public:
     int stop_log();
     int initialize_log();
     int configure_log(LogConfig config);
-    bool is_logging();
 
 public slots:
 
