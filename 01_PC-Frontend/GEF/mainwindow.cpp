@@ -73,6 +73,7 @@ int MainWindow::stop_application()
 
 
 
+
 //////////////////////////////////////SLOTS///////////////////////////////////////////////////
 
 /** @brief  Initialisiert die Serielle Schnittstelle mit den Einstellungen aus der .ini Datei
