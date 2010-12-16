@@ -15,13 +15,12 @@
 #define SOURCE_GUI                 2
 #define SOURCE_CONFIG              3
 #define SOURCE_SYSTEM              4
-#define SOURCE_ARDUINO             5
+#define SOURCE_INTERPRETER         5
 #define SOURCE_LOGGING             6
 #define SOURCE_CONSOLE             7
-#define SOURCE_INTERPRETER         8
 
 //Message Type
-#define TYPE_MESSAGE             0
+//#define TYPE_MESSAGE             0
 #define TYPE_ERROR               -1
 #define TYPE_STATUS_LVL_1        1  //bestätigungen
 #define TYPE_STATUS_LVL_2        2  //grobe abläufe
@@ -49,6 +48,7 @@
 
 //Events im Schienennetz
 #define RAIL_EVENT_ACTIVATED    1
+#define RAIL_EVENT_SPEED        2
 
 typedef struct RailEvent
 {

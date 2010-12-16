@@ -148,17 +148,6 @@ void MainWindow::status_message_hub(QString message, int source, int type)
 }
 
 
-/** @brief  Empfängt die Konsoleneingaben
-  *
-  * @todo   Implementieren
-  */
-void MainWindow::console_receive_data()
-{
-    //daten an interpreter senden
-
-    //je nach verbose an konsole senden
-}
-
 
 /** @brief  Empfängt die vom Interpreter fertig dekodierten Nachrichten
   *
@@ -168,20 +157,6 @@ void MainWindow::interpreter_receive_incoming_data()
 {
     //an konsole senden
     //an gui senden
-    //an filelog senden
-}
-
-
-/** @brief  Empfängt die vom Interpreter fertig kodierten Nachrichten.
-  *
-  * @param  data    Telegramm, bereit zum senden.
-  *
-  * @todo   Implementieren
-  */
-void MainWindow::interpreter_receive_outgoing_data(QByteArray data)
-{
-    //an serialinterface senden
-    //an konsole senden
     //an filelog senden
 }
 

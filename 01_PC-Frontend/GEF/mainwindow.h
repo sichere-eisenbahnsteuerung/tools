@@ -44,9 +44,7 @@ private slots:
     void aktion_trennen();
     void aktion_beenden();
 
-    void console_receive_data();
     void interpreter_receive_incoming_data();
-    void interpreter_receive_outgoing_data(QByteArray data);
     void serial_receive_data(QByteArray data);
     void status_message_hub(QString message, int source, int type);
 
