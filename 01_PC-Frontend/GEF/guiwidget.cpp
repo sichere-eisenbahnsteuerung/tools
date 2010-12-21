@@ -478,7 +478,7 @@ int GuiWidget::draw_train_data(QPainter *paint, int dx, int dy, int height, int 
     traintext.append(tr("Geschwindigkeit: %1\r\n").arg(train_speed[0]));
     traintext.append("\r\n");
     traintext.append("Zug 2\r\n");
-    traintext.append(tr("Geschwindigkeit: %1XXXX\r\n").arg(train_speed[1]));
+    traintext.append(tr("Geschwindigkeit: %1\r\n").arg(train_speed[1]));
 
     paint->drawText(dx, dy, width, height,Qt::AlignLeft, traintext);
 
