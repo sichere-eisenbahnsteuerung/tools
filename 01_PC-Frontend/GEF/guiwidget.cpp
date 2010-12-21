@@ -99,10 +99,14 @@ int GuiWidget::display_data(QList<RailEvent> events)
             if(current_event.event == RAIL_EVENT_ACTIVATED)
             {
                 active_switches[current_event.object_number-1] = QTime::currentTime();
+                switch_positions[current_event.object_number-1] = current_event.data;
             }
             break;
         case RAIL_TRAIN:
-
+            if(current_event.event == RAIL_EVENT_SPEED)
+            {
+                train_speed[current_event.object_number-1] = current_event.data;
+            }
             break;
         default:
 
@@ -471,14 +475,11 @@ int GuiWidget::draw_train_data(QPainter *paint, int dx, int dy, int height, int 
     paint->setPen(QPen(QBrush(QColor("black")), 10));
 
     traintext.append("Zug 1\r\n");
-    traintext.append(tr("Geschwindigkeit:  XXXX\r\n"));
-    traintext.append(tr("Wagons:           XXX\r\n"));
-    traintext.append(tr("Sonstiges:        XXX\r\n"));
+    traintext.append(tr("Geschwindigkeit: %1\r\n").arg(train_speed[0]));
     traintext.append("\r\n");
     traintext.append("Zug 2\r\n");
-    traintext.append(tr("Geschwindigkeit:  XXXX\r\n"));
-    traintext.append(tr("Wagons:           XXX\r\n"));
-    traintext.append(tr("Sonstiges:        XXX\r\n"));
+    traintext.append(tr("Geschwindigkeit: %1XXXX\r\n").arg(train_speed[1]));
+
     paint->drawText(dx, dy, width, height,Qt::AlignLeft, traintext);
 
     return SUCCESS;
@@ -514,6 +515,11 @@ int GuiWidget::initialize_gui()
         for(int i = 0; i < 3; i++)
         {
             switch_positions[i] = 100;
+        }
+
+        for(int i = 0; i < 2; i++)
+        {
+            train_speed[i] = 0;
         }
 
         emit status_message("Modul initialisiert", SOURCE_GUI, TYPE_STATUS_LVL_1);

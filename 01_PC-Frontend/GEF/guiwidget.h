@@ -33,6 +33,7 @@ private:
     GuiConfig configuration;
 
     int switch_positions[3];
+    int train_speed[2];
 
     int active_time;    //zeit in msec wie lange die activität angezeit werden soll
 
