@@ -1,9 +1,13 @@
 #include "guiwidget.h"
 
+/** @brief  Konstruktor der Klasse.
+  *
+  *         Wird beim Erstellen eines GuiWidget Objekts aufgerufen. Initialisiert die
+  *         Klassenweit verfügbaren Status-Variablen.
+  */
 GuiWidget::GuiWidget(QWidget *parent) :
     QWidget(parent)
 {
-    active_time = 2000;
     running = false;
     stopping = false;
     initialized = false;
@@ -14,17 +18,21 @@ GuiWidget::GuiWidget(QWidget *parent) :
 
 /** @brief  Zeichnet das Widget komplett neu.
   *
-  * @todo   parameter entferen oder beschreiben
-  * @todo   positionierung der komponenten prüfen
+  *         Fängt alle von der Anwendung generierten(fenster verschoben, etc.) oder manuell ausgelösten
+  *         PaintEvents ab und zeichnet die GUI. Es werden dabei Positionen relativ zum übergeordneten Widget
+  *         verwendet.
   */
 void GuiWidget::paintEvent( QPaintEvent * )
 {
+    if(!running) return;
+
     emit status_message("Starte Frame-Zeichnung", SOURCE_GUI, TYPE_STATUS_LVL_4);
 
     qreal parentheight = parentWidget()->size().height();
     qreal parentwidth = parentWidget()->size().width();
 
     this->setMinimumSize(parentwidth, parentheight);
+    this->setMaximumSize(parentwidth, parentheight);
 
     QPainter paint(this);
     draw_rails(&paint, 25,25,parentheight-50,parentwidth*0.75);
@@ -39,9 +47,11 @@ void GuiWidget::paintEvent( QPaintEvent * )
 
 
 
-/** @brief Übergibt eine Konfigurationsdatei an das Widget
+/** @brief  Übergibt eine Konfigurationsdatei an das Widget
   *
-  * @param config   Konfigurationsdatei
+  *         Eine KOnfigurationsänderung ist nicht bei laufendem Modul möglich.
+  *
+  * @param      config      Konfigurations-Strukt
   *
   * @return     SUCCESS     Konfiguration erfolgreich.
   *             FAILURE     Konfiguration war nicht möglich.
@@ -52,6 +62,7 @@ int GuiWidget::configure_gui(GuiConfig config)
     {
         configuration = config;
         initialized = false;
+        configured = true;
         emit status_message("Konfiguration Erfolgreich", SOURCE_GUI, TYPE_STATUS_LVL_1);
         return SUCCESS;
     }
@@ -65,15 +76,14 @@ int GuiWidget::configure_gui(GuiConfig config)
 
 
 
-/** @brief  Übergibt die darzustellenden Daten an das Widget
+/** @brief  Übergibt eine Liste mit darzustellenden RailEvents
   *
-  * @param  events  darzustellende Daten
+  *         Die ügergebenen RailEvents werden ausgewertet und beim nächsten Zeichenzyklus dargestellt.
+  *
+  * @param      events      Liste der darzustellenden RailEvents
   *
   * @return     SUCCESS     Übergabe erfolgreich.
   *             FAILURE     Übergabe war nicht möglich.
-  *
-  * @todo   Übergabe und Speicherung von Zugdaten einführen
-  * @todo   Fehler bei unsinnigen Daten ausgeben.
   */
 int GuiWidget::display_data(QList<RailEvent> events)
 {
@@ -133,8 +143,6 @@ int GuiWidget::display_data(QList<RailEvent> events)
   *
   * @return     SUCCESS     Zeichnung erfolgreich.
   *             FAILURE     Zeichnung war nicht möglich.
-  *
-  * @todo   ggf. aufhübschen (echte schienenoptik), absolut sekundär
   */
 int GuiWidget::draw_rails(QPainter *paint, int dx, int dy, int height, int width)
 {
@@ -146,11 +154,10 @@ int GuiWidget::draw_rails(QPainter *paint, int dx, int dy, int height, int width
     paint->drawLine(dx+width,   dy+100,     dx+width,           dy+height-50);      //rechts
     paint->drawLine(dx+50,      dy+height,  dx+width-50,        dy+height);         //unten
 
-    //paint->setPen(QPen(QBrush(QColor("red")), 10));
-    paint->drawArc(QRect(dx,dy+50,100,100),90*16,90*16);    //oben links
-    paint->drawArc(QRect(dx+width-100,dy+50,100,100),0*16,90*16); //oben rechts
-    paint->drawArc(QRect(dx,dy+height-100,100,100),180*16,90*16);    //unten links
-    paint->drawArc(QRect(dx+width-100,dy+height-100,100,100),270*16,90*16);    //unten rechts
+    paint->drawArc(QRect(dx,dy+50,100,100),90*16,90*16);                            //oben links
+    paint->drawArc(QRect(dx+width-100,dy+50,100,100),0*16,90*16);                   //oben rechts
+    paint->drawArc(QRect(dx,dy+height-100,100,100),180*16,90*16);                   //unten links
+    paint->drawArc(QRect(dx+width-100,dy+height-100,100,100),270*16,90*16);         //unten rechts
 
     //innengleis
     paint->drawLine(dx+width*0.3, dy+(height*0.75), dx+width-50, dy+(height*0.75));
@@ -170,6 +177,9 @@ int GuiWidget::draw_rails(QPainter *paint, int dx, int dy, int height, int width
 
 /** @brief  Zeichnet einen Sensor
   *
+  *         Zeichnet einen einzelnen Sensor(Kreis) an der angegebenen Position. Ist der Parameter "active" true
+  *         wird ein aktiver(grüner) Sensor gezeichnet.
+  *
   * @param  *paint  Pointer auf die verwendete Leinwand.
   * @param  x       Abstand vom linken Rand der Leinwand
   * @param  y       Abstand vom oberen Rand der Leinwand
@@ -177,8 +187,6 @@ int GuiWidget::draw_rails(QPainter *paint, int dx, int dy, int height, int width
   *
   * @return     SUCCESS     Zeichnung erfolgreich.
   *             FAILURE     Zeichnung war nicht möglich.
-  *
-  * @todo   ggf. aufhübschen, absolut sekundär
   */
 int GuiWidget::draw_sensor(QPainter *paint, int x, int y, bool active)
 {
@@ -193,7 +201,7 @@ int GuiWidget::draw_sensor(QPainter *paint, int x, int y, bool active)
         paint->setPen(QPen(QBrush(QColor("red")), 10));
     }
 
-    paint->drawEllipse(x,y,15,15);
+    paint->drawEllipse(x,y,configuration.draw_sensor_size, configuration.draw_sensor_size);
 
     return SUCCESS;
 }
@@ -201,29 +209,28 @@ int GuiWidget::draw_sensor(QPainter *paint, int x, int y, bool active)
 
 
 
-/** @brief  Zeichnet alle Sensoren neu.
+/** @brief  Zeichnet alle Sensoren des Schienennetzes.
   *
   *         dx/dy beschreiben den künstlichen Ursprung auf der Leinwand.
-  *         Height/width beschreiben die Größe
+  *         Height/width beschreiben die Größe.
+  *         Vor dem Zeichnen wird mit Hilfe der gespeicherten Zeiten der letzten Aktivierung
+  *         berechnet ob ein Sensor aktiv ist, oder nicht.
   *
-  * @param  *paint  Pointer auf die verwendete Leinwand.
-  * @param  dx      Abstand vom linken Rand der Leinwand
-  * @param  dy      Abstand vom oberen Rand der Leinwand
-  * @param  height  Höhe der Zeichnung
-  * @param  width   Breite der Zeichnung
+  * @param      *paint      Pointer auf die verwendete Leinwand.
+  * @param      dx          Abstand vom linken Rand der Leinwand
+  * @param      dy          Abstand vom oberen Rand der Leinwand
+  * @param      height      Höhe der Zeichnung
+  * @param      width       Breite der Zeichnung
   *
   * @return     SUCCESS     Zeichnung erfolgreich.
   *             FAILURE     Zeichnung war nicht möglich.
-  *
-  * @todo   fehler der einzelfunktionen sammeln und ggf mit FAILURE melden
-  * @todo   sensor positionen anpassen
   */
 int GuiWidget::draw_all_sensors(QPainter *paint, int dx, int dy, int height, int width)
 {
     bool active[14];
     for(int i = 0; i < 14; i++)
     {
-        if(active_sensors[i].msecsTo(QTime::currentTime()) <= active_time)
+        if(active_sensors[i].msecsTo(QTime::currentTime()) <= configuration.active_time)
         {
             active[i] = true;
         }
@@ -255,26 +262,26 @@ int GuiWidget::draw_all_sensors(QPainter *paint, int dx, int dy, int height, int
 
 /** @brief  Zeichnet eine Weiche
   *
-  *         Mögliche Stellungen:
+  *         Mögliche Stellungen(alignment):
   *         0 = |
   *         1 = /
   *         2 = --
   *         3 = \
   *
-  * @param  *paint      Pointer auf die verwendete Leinwand.
-  * @param  x           Abstand vom linken Rand der Leinwand
-  * @param  y           Abstand vom oberen Rand der Leinwand
-  * @param  alignment   Gibt die Stellung der Weiche an
-  * @param  active      wenn 'true' wird eine aktive Weiche gezeichnet.
+  *         Bei einer aktiven Weiche wird der Rand grün dargestellt.
+  *
+  * @param      *paint      Pointer auf die verwendete Leinwand.
+  * @param      x           Abstand vom linken Rand der Leinwand
+  * @param      y           Abstand vom oberen Rand der Leinwand
+  * @param      alignment   Gibt die Stellung der Weiche an
+  * @param      active      wenn 'true' wird eine aktive Weiche gezeichnet.
   *
   * @return     SUCCESS     Zeichnung erfolgreich.
   *             FAILURE     Zeichnung war nicht möglich.
-  *
-  * @todo   ggf. aufhübschen, absolut sekundär
   */
 int GuiWidget::draw_switch(QPainter *paint, int x, int y, int alignment, bool active)
 {
-    int size = 25;
+    int size = configuration.draw_switch_size;
 
     if(active)
     {
@@ -286,6 +293,7 @@ int GuiWidget::draw_switch(QPainter *paint, int x, int y, int alignment, bool ac
         paint->setBrush(QBrush(QColor("white")));
         paint->setPen(QPen(QBrush(QColor("black")), 5));
     }
+
     paint->drawRect(x,y,size,size);
 
     paint->setBrush(QBrush(QColor("black")));
@@ -323,29 +331,28 @@ int GuiWidget::draw_switch(QPainter *paint, int x, int y, int alignment, bool ac
 
 
 
-/** @brief  Zeichnet alle Weichen neu.
+/** @brief  Zeichnet alle Weichen des Schienennetzes.
   *
   *         dx/dy beschreiben den künstlichen Ursprung auf der Leinwand.
-  *         Height/width beschreiben die Größe
+  *         Height/width beschreiben die Größe.
+  *         Vor dem Zeichnen wird mit Hilfe der gespeicherten Zeiten der letzten Aktivierung
+  *         berechnet ob eine Weiche aktiv ist, oder nicht.
   *
-  * @param  *paint  Pointer auf die verwendete Leinwand.
-  * @param  dx      Abstand vom linken Rand der Leinwand
-  * @param  dy      Abstand vom oberen Rand der Leinwand
-  * @param  height  Höhe der Zeichnung
-  * @param  width   Breite der Zeichnung
+  * @param      *paint      Pointer auf die verwendete Leinwand.
+  * @param      dx          Abstand vom linken Rand der Leinwand
+  * @param      dy          Abstand vom oberen Rand der Leinwand
+  * @param      height      Höhe der Zeichnung
+  * @param      width       Breite der Zeichnung
   *
   * @return     SUCCESS     Zeichnung erfolgreich.
   *             FAILURE     Zeichnung war nicht möglich.
-  *
-  * @todo   fehler der einzelfunktionen sammeln und ggf mit FAILURE melden
-  * @todo   weichen positionen anpassen
   */
 int GuiWidget::draw_all_switches(QPainter *paint, int dx, int dy, int height, int width)
 {
     bool active[3];
     for(int i = 0; i < 3; i++)
     {
-        if(active_switches[i].msecsTo(QTime::currentTime()) <= active_time)
+        if(active_switches[i].msecsTo(QTime::currentTime()) <= configuration.active_time)
         {
             active[i] = true;
         }
@@ -366,21 +373,24 @@ int GuiWidget::draw_all_switches(QPainter *paint, int dx, int dy, int height, in
 
 
 
-/** @brief  Zeichnet einen Entkoppler
+/** @brief  Zeichnet einen Entkuppler
   *
-  * @param  *paint  Pointer auf die verwendete Leinwand.
-  * @param  x       Abstand vom linken Rand der Leinwand
-  * @param  y       Abstand vom oberen Rand der Leinwand
-  * @param  active  wenn 'true' wird ein aktiver Entkoppler gezeichnet.
+  *         Der Entkuppler wird an der gegebenen Position gezeichnet. Ist er aktiv wird
+  *         sein Kern in grün dargestellt.
+  *
+  * @param      *paint      Pointer auf die verwendete Leinwand.
+  * @param      x           Abstand vom linken Rand der Leinwand
+  * @param      y           Abstand vom oberen Rand der Leinwand
+  * @param      active      wenn 'true' wird ein aktiver Entkoppler gezeichnet.
   *
   * @return     SUCCESS     Zeichnung erfolgreich.
   *             FAILURE     Zeichnung war nicht möglich.
-  *
-  * @todo   ggf. aufhübschen, absolut sekundär
   */
 int GuiWidget::draw_coupler(QPainter *paint, int x, int y, bool active)
 {
-    int size = 30;
+    int size = configuration.draw_coupler_size;
+    QPoint p1,p2,p3;
+    QVector<QPoint> point_vector;
 
     if(active)
     {
@@ -393,47 +403,43 @@ int GuiWidget::draw_coupler(QPainter *paint, int x, int y, bool active)
         paint->setPen(QPen(QBrush(QColor("black")), 5));
     }
 
-    QPoint p1,p2,p3;
     p1 = QPoint(x,y+int(0.5*size*sqrt(3)));
     p2 = QPoint(x+size*0.5, y);
     p3 = QPoint(x+size,y+int(0.5*size*sqrt(3)));
-    QVector<QPoint> point_vector;
+
     point_vector.append(p1);
     point_vector.append(p2);
     point_vector.append(p3);
 
-    QPolygon poly(point_vector);
-
-    paint->drawPolygon(poly);
+    paint->drawPolygon(QPolygon(point_vector));
 
     return SUCCESS;
 }
 
 
 
-/** @brief  Zeichnet alle Entkoppler neu.
+/** @brief  Zeichnet alle Entkuppler des Schienennetzes.
   *
   *         dx/dy beschreiben den künstlichen Ursprung auf der Leinwand.
   *         Height/width beschreiben die Größe
+  *         Vor dem Zeichnen wird mit Hilfe der gespeicherten Zeiten der letzten Aktivierung
+  *         berechnet ob eine Weiche aktiv ist, oder nicht.
   *
-  * @param  *paint  Pointer auf die verwendete Leinwand.
-  * @param  dx      Abstand vom linken Rand der Leinwand
-  * @param  dy      Abstand vom oberen Rand der Leinwand
-  * @param  height  Höhe der Zeichnung
-  * @param  width   Breite der Zeichnung
+  * @param      *paint      Pointer auf die verwendete Leinwand.
+  * @param      dx          Abstand vom linken Rand der Leinwand
+  * @param      dy          Abstand vom oberen Rand der Leinwand
+  * @param      height      Höhe der Zeichnung
+  * @param      width       Breite der Zeichnung
   *
   * @return     SUCCESS     Zeichnung erfolgreich.
   *             FAILURE     Zeichnung war nicht möglich.
-  *
-  * @todo   fehler der einzelfunktionen sammeln und ggf mit FAILURE melden
-  * @todo   Entkoppler positionen anpassen
   */
 int GuiWidget::draw_all_couplers(QPainter *paint, int dx, int dy, int height, int width)
 {
     bool active[2];
     for(int i = 0; i < 2; i++)
     {
-        if(active_couplers[i].msecsTo(QTime::currentTime()) <= active_time)
+        if(active_couplers[i].msecsTo(QTime::currentTime()) <= configuration.active_time)
         {
             active[i] = true;
         }
@@ -463,10 +469,6 @@ int GuiWidget::draw_all_couplers(QPainter *paint, int dx, int dy, int height, in
   *
   * @return     SUCCESS     Zeichnung erfolgreich.
   *             FAILURE     Zeichnung war nicht möglich.
-  *
-  * @todo   Zugdaten positionen anpassen
-  * @todo   datenstruktur für zugdaten anlegen und darstellen.
-  * @todo   änderungen ggf farbig
   */
 int GuiWidget::draw_train_data(QPainter *paint, int dx, int dy, int height, int width)
 {
@@ -488,6 +490,8 @@ int GuiWidget::draw_train_data(QPainter *paint, int dx, int dy, int height, int 
 
 
 /** @brief  Initialisiert das Widget mit der aktuellen Konfiguration.
+  *
+  *         Sämtliche darzustellenden Werte werden gesetzt.
   *
   * @return     SUCCESS     Initialisierung erfolgreich.
   *             FAILURE     Initialisierung war nicht möglich.
@@ -522,18 +526,32 @@ int GuiWidget::initialize_gui()
             train_speed[i] = 0;
         }
 
+        initialized = true;
         emit status_message("Modul initialisiert", SOURCE_GUI, TYPE_STATUS_LVL_1);
-
         return SUCCESS;
     }
     else
     {
-        emit status_message("Modul initialisiert", SOURCE_GUI, TYPE_ERROR);
+        emit status_message("Modul nicht initialisiert", SOURCE_GUI, TYPE_ERROR);
         return FAILURE;
     }
 
 }
 
+
+/** @brief  Gibt zurück ob das Modul beendet ist.
+  */
+bool GuiWidget::is_terminated()
+{
+    if(!running && !stopping)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 
 
 /** @brief  Startet das Widget.
@@ -563,7 +581,9 @@ int GuiWidget::start_gui()
 
 
 
-/** @brief  Setzt das Stop-Flag der GUI. Stop erfolgt je nach FPS
+/** @brief  Setzt das Stop-Flag der GUI.
+  *
+  *         Der tatsächliche Stop erfolgt später, je nach Rechenzeit und gewählter Bildwiederholrate.
   *
   * @return     SUCCESS     Initialisierung erfolgreich.
   *             FAILURE     Initialisierung war nicht möglich.
@@ -587,7 +607,7 @@ int GuiWidget::stop_gui()
 
 /** @brief  Hauptschleife des Widgets.
   *
-  *         Ruft sich selbst auf.
+  *         Ruft sich selbst auf und stellt damit eine feste Framezahl her.
   */
 void GuiWidget::run_gui()
 {
@@ -597,10 +617,13 @@ void GuiWidget::run_gui()
         int timer = 1000 / configuration.frames_per_second;
         QTimer::singleShot(timer, this, SLOT(run_gui()));
     }
+    else
+    {
+        running = false;
+        stopping = false;
+        emit status_message("Modul gestoppt", SOURCE_GUI, TYPE_STATUS_LVL_1);
+    }
 
-    running = false;
-    stopping = false;
-    emit status_message("Modul gestoppt", SOURCE_GUI, TYPE_STATUS_LVL_1);
 }
 
 

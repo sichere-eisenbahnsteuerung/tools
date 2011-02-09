@@ -53,6 +53,21 @@ int Interpreter::initialize_interpreter()
 }
 
 
+/** @brief  Gibt zurück ob das Modul beendet ist.
+  */
+bool Interpreter::is_terminated()
+{
+    if(!running)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
 /** @brief  Startet das Modul
   *
   * @todo   Implementieren

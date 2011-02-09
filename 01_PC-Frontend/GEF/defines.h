@@ -94,6 +94,10 @@ typedef struct InterpreterConfig
 typedef struct GuiConfig
 {
     int frames_per_second;
+    int active_time;
+    int draw_sensor_size;
+    int draw_switch_size;
+    int draw_coupler_size;
 }GuiConfig;
 
 typedef struct AppConfig

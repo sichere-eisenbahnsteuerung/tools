@@ -15,6 +15,7 @@ public:
     int initialize_interpreter();
     int start_interpreter();
     int stop_interpreter();
+    bool is_terminated();
 
     int add_incoming_data(QByteArray data);
     int encode_outgoing_message(QString message);

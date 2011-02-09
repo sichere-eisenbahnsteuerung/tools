@@ -4,8 +4,6 @@
 #include "defines.h"
 #include "includes.h"
 
-#include <QThread>
-
 class SerialInterface : public QThread
 {
     Q_OBJECT
@@ -16,15 +14,19 @@ public:
     int initialize_serial_interface();
     int stop_serial_interface();
     int start_serial_interface();
-    int send_message(QByteArray message);
+
+    bool is_terminated();
+
+    //int send_message(QByteArray message);
 
 private:
     SerialConfig configuration;
     bool initialized;
     bool stopping;
     bool running;
+    bool configured;
 
-    QList<QByteArray> out_queue;
+    //QList<QByteArray> out_queue;
 
     HANDLE porthandle;
 

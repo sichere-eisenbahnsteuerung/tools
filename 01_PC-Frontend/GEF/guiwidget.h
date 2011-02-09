@@ -4,8 +4,6 @@
 #include "includes.h"
 #include "defines.h"
 
-#include <QWidget>
-
 class GuiWidget : public QWidget
 {
     Q_OBJECT
@@ -15,6 +13,7 @@ public:
     int initialize_gui();
     int start_gui();
     int stop_gui();
+    bool is_terminated();
 
     int display_data(QList<RailEvent> events);
 
@@ -34,8 +33,6 @@ private:
 
     int switch_positions[3];
     int train_speed[2];
-
-    int active_time;    //zeit in msec wie lange die activität angezeit werden soll
 
     int draw_rails(QPainter *paint, int dx, int dy, int height, int width);
 

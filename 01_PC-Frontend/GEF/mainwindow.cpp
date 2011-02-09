@@ -3,7 +3,8 @@
 
 /** @brief  Konstruktor der Klasse.
   *
-  *
+  *         Wird automatisch bei Programmstart von der main-Funktion aufgerufen.
+  *         Es werden alle Module als Objekte erstellt und die Anwendung initialisiert.
   */
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -19,76 +20,67 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->debug_send_button, SIGNAL(clicked()), this, SLOT(debug_commandline()));
 #endif
 
-    filelog = new FileLogging(this);
-    serialinterface = new SerialInterface(this);
-    guiwidget = new GuiWidget(ui->gui_widget);   
-    consolewidget = new ConsoleWidget(ui->console_widget);
-    interpreter = new Interpreter(this);
+    filelog         =   new FileLogging(this);
+    serialinterface =   new SerialInterface(this);
+    guiwidget       =   new GuiWidget(ui->gui_widget);
+    consolewidget   =   new ConsoleWidget(ui->console_widget);
+    interpreter     =   new Interpreter(this);
+    configwidget    =   new ConfigurationWidget(ui->config_widget);
 
-    configwidget = new ConfigurationWidget(ui->config_widget);
     configwidget->configure_config_widget("GEF.ini");
+
+    connect(this, SIGNAL(status_message(QString,int,int)), this, SLOT(status_message_hub(QString,int,int)));
+    connect(filelog, SIGNAL(status_message(QString,int,int)), this, SLOT(status_message_hub(QString,int,int)));
+    connect(serialinterface, SIGNAL(status_message(QString,int,int)), this, SLOT(status_message_hub(QString,int,int)));
+    connect(guiwidget, SIGNAL(status_message(QString,int,int)), this, SLOT(status_message_hub(QString,int,int)));
+    connect(consolewidget, SIGNAL(status_message(QString,int,int)), this, SLOT(status_message_hub(QString,int,int)));
+    connect(interpreter, SIGNAL(status_message(QString,int,int)), this, SLOT(status_message_hub(QString,int,int)));
+
+    connect(serialinterface, SIGNAL(incoming_bytes(QByteArray)), this, SLOT(serial_receive_data(QByteArray)));
+    connect(interpreter, SIGNAL(message_decoded(QList<RailEvent>)), this, SLOT(interpreter_receive_incoming_data(QList<RailEvent>)));
 
     connect(ui->actionBeenden, SIGNAL(triggered()), this, SLOT(aktion_beenden()));
     connect(ui->actionTrennen, SIGNAL(triggered()), this, SLOT(aktion_trennen()));
     connect(ui->actionVerbinden, SIGNAL(triggered()), this, SLOT(aktion_verbinden()));
 
-    ready_to_exit = true;
+    terminating = false;
 
     initialize_application();
 }
 
-/** @brief  Destruktor der Klasse.
-  *
-  *
-  */
-MainWindow::~MainWindow()
-{
-    delete ui;
-}
 
-
-/** @brief  Initialisiert alle Module.
+/** @brief  Initialisiert die Basismodule.
   *
-  * @return SUCCESS Alle Module erfolgreich initialisiert.
-  *         FAILURE Fehler bei mindestens einer Initialisierung.
-  *
-  * @todo   Fehler abfangen
+  *         Es werden alle Module initialisiert und gestartet die für die Anzeige und Konfiguration
+  *         notwendig sind.
   */
-int MainWindow::initialize_application()
+void MainWindow::initialize_application()
 {
     this->configuration = configwidget->get_config_app();
 
-    guiwidget->configure_gui(configwidget->get_config_gui());
-    guiwidget->initialize_gui();
-    guiwidget->start_gui();
+    if(consolewidget->configure_console(configwidget->get_config_console()) == SUCCESS)
+    {
+        if(consolewidget->initialize_console() == SUCCESS)
+        {
+            consolewidget->start_console();
+        }
+    }
 
-    consolewidget->configure_console(configwidget->get_config_console());
-    consolewidget->initialize_console();
-    consolewidget->start_console();
+    if(guiwidget->configure_gui(configwidget->get_config_gui()) == SUCCESS)
+    {
+        if(guiwidget->initialize_gui() == SUCCESS)
+        {
+            guiwidget->start_gui();
+        }
+    }
 
-    filelog->configure_log(configwidget->get_config_log());
-    filelog->initialize_log();
-    filelog->start_log();
-
-    interpreter->configure_interpreter(configwidget->get_config_interpreter());
-    interpreter->initialize_interpreter();
-    interpreter->start_interpreter();
-
-    return SUCCESS;
-}
-
-
-/** @brief  Stoppt alle Module.
-  *
-  * @return SUCCESS Alle Module erfolgreich gestoppt.
-  *         FAILURE Fehler bei mindestens einem Modul.
-  *
-  * @todo   Implementieren
-  */
-int MainWindow::stop_application()
-{
-
-    return SUCCESS;
+    if(filelog->configure_log(configwidget->get_config_log()) == SUCCESS)
+    {
+        if(filelog->initialize_log() == SUCCESS)
+        {
+            filelog->start_log();
+        }
+    }
 }
 
 
@@ -96,43 +88,91 @@ int MainWindow::stop_application()
 
 //////////////////////////////////////SLOTS///////////////////////////////////////////////////
 
-/** @brief  Initialisiert die Serielle Schnittstelle mit den Einstellungen aus der .ini Datei
+/** @brief  Behandelt das Drücken des "Verbinden" Buttons
   *
-  *         - Lädt die Werte aus der .ini Datei
-  *         - Erstellt ein neues SerialInterface Objekt mit Hilfe des lokalen Pointers
-  *         - Übergibt dabei die Konfiguration
-  *         - Versucht die Schnittstelle zu initialisieren.
-  *             -Wenn Erfolgreich wird der Thread gestartet.
+  *         Initialisiert und Startet den Interpreter und die Serielle Schnittstelle.
   */
 void MainWindow::aktion_verbinden()
 {
-    serialinterface->configure_serial_interface(configwidget->get_config_serial());
-    serialinterface->initialize_serial_interface();
-    serialinterface->start_serial_interface();
+    if(terminating) return;
+
+    bool interpreter_launched = false;
+
+    if(interpreter->configure_interpreter(configwidget->get_config_interpreter()) == SUCCESS)
+    {
+        if(interpreter->initialize_interpreter() == SUCCESS)
+        {
+            if(interpreter->start_interpreter() == SUCCESS)
+            {
+                interpreter_launched = true;
+            }
+        }
+    }
+
+    if(interpreter_launched)
+    {
+        if(serialinterface->configure_serial_interface(configwidget->get_config_serial()) == SUCCESS)
+        {
+            if(serialinterface->initialize_serial_interface() == SUCCESS)
+            {
+                serialinterface->start_serial_interface();
+            }
+        }
+    }
 }
 
 
 
-/** @brief  Behandlung des "Trennen" Buttons
+/** @brief  Behandelt das Drücken des "Trennen" Buttons
   *
+  *         Stoppt die Serielle Schnittstelle und den Interpreter.
   */
 void MainWindow::aktion_trennen()
 {
+    if(terminating) return;
 
+    if(serialinterface->stop_serial_interface() == FAILURE)
+    {
+        emit status_message("Fehler beim Trennen. System läuft weiter!", SOURCE_SYSTEM, TYPE_ERROR);
+    }
+    else if(interpreter->stop_interpreter() == FAILURE)
+    {
+        emit status_message("Fehler im Interpreter. Interpreter läuft weiter!", SOURCE_SYSTEM, TYPE_ERROR);
+    }
 }
 
 
 
-/** @brief  Beendet das Programm kontrolliert
+/** @brief  Behandelt das Drücken des "Beenden" Buttons
   *
+  *         Alle Module erhalten den Befehl sich zu beenden. Bestätigen alle Module den Befehl
+  *         wird mit "wait_for_termination" darauf gewartet, dass sich alle Module beenden.
   */
 void MainWindow::aktion_beenden()
 {
+    if(terminating) return;
 
+    if(serialinterface->stop_serial_interface() == FAILURE ||
+       interpreter->stop_interpreter() == FAILURE ||
+       filelog->stop_log() == FAILURE ||
+       guiwidget->stop_gui() == FAILURE ||
+       consolewidget->stop_console() == FAILURE)
+    {
+        terminating = false;
+        emit status_message("Ein Modul lässt sich nicht beenden!", SOURCE_SYSTEM, TYPE_ERROR);
+    }
+    else
+    {
+        terminating = true;
+        this->wait_for_termination();
+    }
 }
 
 
-/** @brief  Sammelt alle Status nachrichten der Module
+/** @brief  Sammelt alle Statusnachrichten der Module
+  *
+  *         Die Statusnachrichten werden je nach Konfiguration und Verbose-Einstellungen an die
+  *         Konsole und/oder an das Filelog weitergeleitet.
   *
   * @param  message     Inhalt der Statusnachricht
   * @param  source      Sendendes Modul
@@ -142,7 +182,9 @@ void MainWindow::aktion_beenden()
   */
 void MainWindow::status_message_hub(QString message, int source, int type)
 {
-    //je nach verbose an konsole senden
+    if(terminating) return;
+
+    //je nach verbose-lvl an konsole senden
 
     //je nach setting an filelog senden
 }
@@ -151,17 +193,28 @@ void MainWindow::status_message_hub(QString message, int source, int type)
 
 /** @brief  Empfängt die vom Interpreter fertig dekodierten Nachrichten
   *
+  *         Hat der Interpreter aus den Rohdaten ein Railevent extrahiert wird dieses
+  *         an die Konsole, das Filelog und an das GuiWidget verteilt.
+  *
+  * @param  events    Liste aller neu erhaltenen Events
+  *
   * @todo   Implementieren
   */
-void MainWindow::interpreter_receive_incoming_data()
+void MainWindow::interpreter_receive_incoming_data(QList<RailEvent> events)
 {
+    if(terminating) return;
+
     //an konsole senden
-    //an gui senden
     //an filelog senden
+
+    guiwidget->display_data(events);
 }
 
 
 /** @brief  Sammelt alle Rohdaten der seriellen Schnittstelle
+  *
+  *         Die seriellen Rohdaten werden an den Interpreter und, je nach Verbose- und Logging Einstellungen,
+  *         auch an die Konsole und das Filelog gesendet.
   *
   * @param  data    Rohdaten von der seriellen Schnittstelle
   *
@@ -169,9 +222,34 @@ void MainWindow::interpreter_receive_incoming_data()
   */
 void MainWindow::serial_receive_data(QByteArray data)
 {
-    //an interpreter senden
-    //an konsole senden
-    //an filelog senden
+    if(terminating) return;
+
+    //ggf an konsole senden
+    //ggf an filelog senden
+
+    interpreter->add_incoming_data(data);
+}
+
+
+/** @brief  Wartet auf alle Module und beendet dann das Programm
+  *
+  *         Prüft jedes Modul ob es beendet ist. Ist dies der Fall wird das Programm ebenfalls beendet.
+  *         Ist mindestens ein Modul nicht beendet ruft sich die Funktion nach einer Sekunde erneut auf.
+  */
+void MainWindow::wait_for_termination()
+{
+    if(serialinterface->is_terminated() &&
+       interpreter->is_terminated() &&
+       consolewidget->is_terminated() &&
+       filelog->is_terminated() &&
+       guiwidget->is_terminated())
+    {
+        this->close();
+    }
+    else
+    {
+        QTimer::singleShot(1000, this, SLOT(wait_for_termination()));
+    }
 }
 
 
@@ -180,20 +258,15 @@ void MainWindow::serial_receive_data(QByteArray data)
 
 /** @brief  Fängt close events des Hauptfensters ab um kontrolliert beenden zu können.
   *
-  * @param  event   Enthält Daten zum Event
+  *         Wird das Hauptfenster über das übliche "X" beendet. Fängt diese überdeckende Funktion
+  *         den Befehl ab und ruft stattdessen die interne "aktion_beenden" auf. So können sich die
+  *         einzelnen Module selbstständig und kontrolliert beenden.
   *
-  * @todo   Implementieren
+  * @param  event   Enthält Daten zum Event. Werden nicht benötigt.
   */
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    if(ready_to_exit)
-    {
-        event->accept();
-    }
-    else
-    {
-        this->aktion_beenden();
-    }
+    this->aktion_beenden();
 }
 
 

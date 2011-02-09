@@ -147,6 +147,14 @@ int ConfigurationWidget::settings_save()
   */
 GuiConfig ConfigurationWidget::get_config_gui()
 {
+    ///////WORKAROUND///////
+    current_config_gui.active_time = 2000;
+    current_config_gui.draw_coupler_size = 20;
+    current_config_gui.draw_sensor_size = 15;
+    current_config_gui.draw_switch_size = 20;
+    current_config_gui.frames_per_second = 20;
+    ////////////////////////
+
     return current_config_gui;
 }
 

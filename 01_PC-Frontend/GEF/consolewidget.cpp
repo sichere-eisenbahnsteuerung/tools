@@ -26,6 +26,21 @@ ConsoleWidget::~ConsoleWidget()
 }
 
 
+/** @brief  Gibt zurück ob das Modul beendet ist.
+  */
+bool ConsoleWidget::is_terminated()
+{
+    if(!running)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
 /** @brief  Startet das initialisierte Modul
   *
   * @todo   Implementieren

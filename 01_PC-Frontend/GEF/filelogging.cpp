@@ -13,6 +13,23 @@ FileLogging::FileLogging(QObject *parent) :
 }
 
 
+/** @brief  Gibt zurück ob das Modul beendet ist.
+  *
+  * @todo implementieren
+  */
+bool FileLogging::is_terminated()
+{
+    if(!running)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
 /** @brief  Fügt eine Nachricht dem Log an.
   *
   * @param  message     Inhalt der Statusnachricht

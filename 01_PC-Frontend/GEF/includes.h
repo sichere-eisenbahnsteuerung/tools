@@ -1,21 +1,25 @@
 #ifndef INCLUDES_H
 #define INCLUDES_H
 
-#include <QSettings>
-#include <QFile>
-#include <QTextStream>
-#include <QTime>
-#include <QDate>
-#include <QFont>
-#include <QList>
 #include <QCloseEvent>
-#include <QTextCursor>
+#include <QDate>
+#include <QFile>
+#include <QFont>
+#include <QKeyEvent>
+#include <QList>
+#include <QMainWindow>
 #include <QPainter>
 #include <QPaintEvent>
-#include <QKeyEvent>
-#include <math.h>
-#include <QTimer>
+#include <QSettings>
 #include <QStringList>
+#include <QTextCursor>
+#include <QTextStream>
+#include <QThread>
+#include <QTime>
+#include <QTimer>
+#include <QWidget>
+
+#include "math.h"
 #include "windows.h"
 
 

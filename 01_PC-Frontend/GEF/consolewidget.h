@@ -20,7 +20,7 @@ public:
     int stop_console();
     int initialize_console();
     int configure_console(ConsoleConfig config);
-
+    bool is_terminated();
     int data_output(QString message, int source, int type);
 
 private:
