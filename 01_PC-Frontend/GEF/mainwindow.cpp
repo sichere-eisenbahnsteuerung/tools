@@ -88,7 +88,7 @@ void MainWindow::initialize_application()
 
 //////////////////////////////////////SLOTS///////////////////////////////////////////////////
 
-/** @brief  Behandelt das Drücken des "Verbinden" Buttons
+/** @brief  Behandelt das Drücken des "Verbinden" Buttons.
   *
   *         Initialisiert und Startet den Interpreter und die Serielle Schnittstelle.
   */
@@ -123,7 +123,7 @@ void MainWindow::aktion_verbinden()
 
 
 
-/** @brief  Behandelt das Drücken des "Trennen" Buttons
+/** @brief  Behandelt das Drücken des "Trennen" Buttons.
   *
   *         Stoppt die Serielle Schnittstelle und den Interpreter.
   */
@@ -143,7 +143,7 @@ void MainWindow::aktion_trennen()
 
 
 
-/** @brief  Behandelt das Drücken des "Beenden" Buttons
+/** @brief  Behandelt das Drücken des "Beenden" Buttons.
   *
   *         Alle Module erhalten den Befehl sich zu beenden. Bestätigen alle Module den Befehl
   *         wird mit "wait_for_termination" darauf gewartet, dass sich alle Module beenden.
@@ -169,7 +169,7 @@ void MainWindow::aktion_beenden()
 }
 
 
-/** @brief  Sammelt alle Statusnachrichten der Module
+/** @brief  Sammelt alle Statusnachrichten der Module.
   *
   *         Die Statusnachrichten werden je nach Konfiguration und Verbose-Einstellungen an die
   *         Konsole und/oder an das Filelog weitergeleitet.
@@ -191,7 +191,7 @@ void MainWindow::status_message_hub(QString message, int source, int type)
 
 
 
-/** @brief  Empfängt die vom Interpreter fertig dekodierten Nachrichten
+/** @brief  Empfängt die vom Interpreter fertig dekodierten Nachrichten.
   *
   *         Hat der Interpreter aus den Rohdaten ein Railevent extrahiert wird dieses
   *         an die Konsole, das Filelog und an das GuiWidget verteilt.
@@ -211,7 +211,7 @@ void MainWindow::interpreter_receive_incoming_data(QList<RailEvent> events)
 }
 
 
-/** @brief  Sammelt alle Rohdaten der seriellen Schnittstelle
+/** @brief  Sammelt alle Rohdaten der seriellen Schnittstelle.
   *
   *         Die seriellen Rohdaten werden an den Interpreter und, je nach Verbose- und Logging Einstellungen,
   *         auch an die Konsole und das Filelog gesendet.
@@ -231,7 +231,7 @@ void MainWindow::serial_receive_data(QByteArray data)
 }
 
 
-/** @brief  Wartet auf alle Module und beendet dann das Programm
+/** @brief  Wartet auf alle Module und beendet dann das Programm.
   *
   *         Prüft jedes Modul ob es beendet ist. Ist dies der Fall wird das Programm ebenfalls beendet.
   *         Ist mindestens ein Modul nicht beendet ruft sich die Funktion nach einer Sekunde erneut auf.

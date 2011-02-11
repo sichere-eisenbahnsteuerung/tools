@@ -1,6 +1,8 @@
 #ifndef INCLUDES_H
 #define INCLUDES_H
 
+
+/////////////////QT-Klassen//////////////////
 #include <QCloseEvent>
 #include <QDate>
 #include <QFile>
@@ -19,6 +21,8 @@
 #include <QTimer>
 #include <QWidget>
 
+
+/////////////////Windows Ressourcen//////////
 #include "math.h"
 #include "windows.h"
 

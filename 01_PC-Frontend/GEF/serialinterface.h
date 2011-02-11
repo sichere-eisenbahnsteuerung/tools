@@ -4,6 +4,11 @@
 #include "defines.h"
 #include "includes.h"
 
+/** @brief  Regelt den gesamten Rohdatenverkehr über den COM-Port
+  *
+  *         Die Klasse verfügt über kein "Wissen" über die Dateninhalte sondern empfängt
+  *         lediglich die Rohdaten und gibt diese zurück.
+  */
 class SerialInterface : public QThread
 {
     Q_OBJECT

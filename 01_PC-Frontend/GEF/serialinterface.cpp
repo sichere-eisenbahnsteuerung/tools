@@ -23,7 +23,7 @@ SerialInterface::SerialInterface(QObject *parent) :
   * @param      config      Konfigurationsdatei
   *
   * @return     SUCCESS     Konfiguration erfolgreich.
-  *             FAILURE     Konfiguration war nicht möglich.
+  * @return     FAILURE     Konfiguration war nicht möglich.
   */
 int SerialInterface::configure_serial_interface(SerialConfig config)
 {
@@ -53,7 +53,7 @@ int SerialInterface::configure_serial_interface(SerialConfig config)
   *         werden wenn die Schnittstelle nicht läuft und eine Konfiguration übergeben wurde.
   *
   * @return     SUCCESS     Schnittstelle wurde erfolgreich initialisiert.
-  *             FAILURE     Fehler bei der Initialisierung.
+  * @return     FAILURE     Fehler bei der Initialisierung.
   */
 int SerialInterface::initialize_serial_interface()
 {
@@ -210,7 +210,7 @@ bool SerialInterface::is_terminated()
 }
 
 
-/** @brief  Hauptschleife des Threads. Empfängt Daten und gibt sie zurück
+/** @brief  Hauptschleife des Threads. Empfängt Daten und gibt sie zurück.
   *
   *         Empfängt Daten über den COM-Port ohne diese zu interpretieren. Daten werden je
   *         nach gewählten Timeouts in unregelmäßigen Blöcken gelesen und per SIGNAL weitergeleitet.
@@ -309,12 +309,12 @@ int SerialInterface::send_message(QByteArray message)
 */
 
 
-/** @brief      Startet die serielle Schnittstelle
+/** @brief      Startet die serielle Schnittstelle.
   *
   *             Ein Start ist nur möglich wenn die Schnittstelle initialisiert ist und nicht läuft.
   *
   * @return     SUCCESS     Start erfolgreich.
-  *             FAILURE     Start war nicht möglich.
+  * @return     FAILURE     Start war nicht möglich.
   */
 int SerialInterface::start_serial_interface()
 {
@@ -333,14 +333,14 @@ int SerialInterface::start_serial_interface()
 
 
 
-/** @brief  Funktion zum Anhalten der seriellen Schnittstelle
+/** @brief  Funktion zum Anhalten der seriellen Schnittstelle.
   *
   *         Es wird ein Flag(stopping) gesetzt welches dem Thread signalisiert, dass
   *         er anhalten soll. Es können u.U noch Nachrichten empfangen werden bevor
   *         der Thread gestoppt ist.
   *
   * @return     SUCCESS     Stop-Flag wurde erfolgreich gesetzt.
-  *             FAILURE     Fehler beim Setzen des Stop-Flags.
+  * @return     FAILURE     Fehler beim Setzen des Stop-Flags.
   */
 int SerialInterface::stop_serial_interface()
 {

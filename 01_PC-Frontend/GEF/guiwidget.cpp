@@ -47,14 +47,14 @@ void GuiWidget::paintEvent( QPaintEvent * )
 
 
 
-/** @brief  Übergibt eine Konfigurationsdatei an das Widget
+/** @brief  Übergibt eine Konfigurationsdatei an das Widget.
   *
   *         Eine KOnfigurationsänderung ist nicht bei laufendem Modul möglich.
   *
   * @param      config      Konfigurations-Strukt
   *
   * @return     SUCCESS     Konfiguration erfolgreich.
-  *             FAILURE     Konfiguration war nicht möglich.
+  * @return     FAILURE     Konfiguration war nicht möglich.
   */
 int GuiWidget::configure_gui(GuiConfig config)
 {
@@ -76,14 +76,14 @@ int GuiWidget::configure_gui(GuiConfig config)
 
 
 
-/** @brief  Übergibt eine Liste mit darzustellenden RailEvents
+/** @brief  Übergibt eine Liste mit darzustellenden RailEvents.
   *
   *         Die ügergebenen RailEvents werden ausgewertet und beim nächsten Zeichenzyklus dargestellt.
   *
   * @param      events      Liste der darzustellenden RailEvents
   *
   * @return     SUCCESS     Übergabe erfolgreich.
-  *             FAILURE     Übergabe war nicht möglich.
+  * @return     FAILURE     Übergabe war nicht möglich.
   */
 int GuiWidget::display_data(QList<RailEvent> events)
 {
@@ -130,7 +130,7 @@ int GuiWidget::display_data(QList<RailEvent> events)
 
 
 
-/** @brief  Zeichnet das Schienennetz
+/** @brief  Zeichnet das Schienennetz.
   *
   *         dx/dy beschreiben den künstlichen Ursprung auf der Leinwand.
   *         Height/width beschreiben die Größe
@@ -142,7 +142,7 @@ int GuiWidget::display_data(QList<RailEvent> events)
   * @param  width   Breite der Zeichnung
   *
   * @return     SUCCESS     Zeichnung erfolgreich.
-  *             FAILURE     Zeichnung war nicht möglich.
+  * @return     FAILURE     Zeichnung war nicht möglich.
   */
 int GuiWidget::draw_rails(QPainter *paint, int dx, int dy, int height, int width)
 {
@@ -175,7 +175,7 @@ int GuiWidget::draw_rails(QPainter *paint, int dx, int dy, int height, int width
 
 
 
-/** @brief  Zeichnet einen Sensor
+/** @brief  Zeichnet einen Sensor.
   *
   *         Zeichnet einen einzelnen Sensor(Kreis) an der angegebenen Position. Ist der Parameter "active" true
   *         wird ein aktiver(grüner) Sensor gezeichnet.
@@ -186,7 +186,7 @@ int GuiWidget::draw_rails(QPainter *paint, int dx, int dy, int height, int width
   * @param  active  wenn 'true' wird ein aktiver sensor gezeichnet.
   *
   * @return     SUCCESS     Zeichnung erfolgreich.
-  *             FAILURE     Zeichnung war nicht möglich.
+  * @return     FAILURE     Zeichnung war nicht möglich.
   */
 int GuiWidget::draw_sensor(QPainter *paint, int x, int y, bool active)
 {
@@ -223,7 +223,7 @@ int GuiWidget::draw_sensor(QPainter *paint, int x, int y, bool active)
   * @param      width       Breite der Zeichnung
   *
   * @return     SUCCESS     Zeichnung erfolgreich.
-  *             FAILURE     Zeichnung war nicht möglich.
+  * @return     FAILURE     Zeichnung war nicht möglich.
   */
 int GuiWidget::draw_all_sensors(QPainter *paint, int dx, int dy, int height, int width)
 {
@@ -260,7 +260,7 @@ int GuiWidget::draw_all_sensors(QPainter *paint, int dx, int dy, int height, int
 
 
 
-/** @brief  Zeichnet eine Weiche
+/** @brief  Zeichnet eine Weiche.
   *
   *         Mögliche Stellungen(alignment):
   *         0 = |
@@ -277,7 +277,7 @@ int GuiWidget::draw_all_sensors(QPainter *paint, int dx, int dy, int height, int
   * @param      active      wenn 'true' wird eine aktive Weiche gezeichnet.
   *
   * @return     SUCCESS     Zeichnung erfolgreich.
-  *             FAILURE     Zeichnung war nicht möglich.
+  * @return     FAILURE     Zeichnung war nicht möglich.
   */
 int GuiWidget::draw_switch(QPainter *paint, int x, int y, int alignment, bool active)
 {
@@ -345,7 +345,7 @@ int GuiWidget::draw_switch(QPainter *paint, int x, int y, int alignment, bool ac
   * @param      width       Breite der Zeichnung
   *
   * @return     SUCCESS     Zeichnung erfolgreich.
-  *             FAILURE     Zeichnung war nicht möglich.
+  * @return     FAILURE     Zeichnung war nicht möglich.
   */
 int GuiWidget::draw_all_switches(QPainter *paint, int dx, int dy, int height, int width)
 {
@@ -373,7 +373,7 @@ int GuiWidget::draw_all_switches(QPainter *paint, int dx, int dy, int height, in
 
 
 
-/** @brief  Zeichnet einen Entkuppler
+/** @brief  Zeichnet einen Entkuppler.
   *
   *         Der Entkuppler wird an der gegebenen Position gezeichnet. Ist er aktiv wird
   *         sein Kern in grün dargestellt.
@@ -384,7 +384,7 @@ int GuiWidget::draw_all_switches(QPainter *paint, int dx, int dy, int height, in
   * @param      active      wenn 'true' wird ein aktiver Entkoppler gezeichnet.
   *
   * @return     SUCCESS     Zeichnung erfolgreich.
-  *             FAILURE     Zeichnung war nicht möglich.
+  * @return     FAILURE     Zeichnung war nicht möglich.
   */
 int GuiWidget::draw_coupler(QPainter *paint, int x, int y, bool active)
 {
@@ -432,7 +432,7 @@ int GuiWidget::draw_coupler(QPainter *paint, int x, int y, bool active)
   * @param      width       Breite der Zeichnung
   *
   * @return     SUCCESS     Zeichnung erfolgreich.
-  *             FAILURE     Zeichnung war nicht möglich.
+  * @return     FAILURE     Zeichnung war nicht möglich.
   */
 int GuiWidget::draw_all_couplers(QPainter *paint, int dx, int dy, int height, int width)
 {
@@ -468,7 +468,7 @@ int GuiWidget::draw_all_couplers(QPainter *paint, int dx, int dy, int height, in
   * @param  width   Breite der Zeichnung
   *
   * @return     SUCCESS     Zeichnung erfolgreich.
-  *             FAILURE     Zeichnung war nicht möglich.
+  * @return     FAILURE     Zeichnung war nicht möglich.
   */
 int GuiWidget::draw_train_data(QPainter *paint, int dx, int dy, int height, int width)
 {
@@ -494,7 +494,7 @@ int GuiWidget::draw_train_data(QPainter *paint, int dx, int dy, int height, int 
   *         Sämtliche darzustellenden Werte werden gesetzt.
   *
   * @return     SUCCESS     Initialisierung erfolgreich.
-  *             FAILURE     Initialisierung war nicht möglich.
+  * @return     FAILURE     Initialisierung war nicht möglich.
   */
 int GuiWidget::initialize_gui()
 {
@@ -557,7 +557,7 @@ bool GuiWidget::is_terminated()
 /** @brief  Startet das Widget.
   *
   * @return     SUCCESS     Initialisierung erfolgreich.
-  *             FAILURE     Initialisierung war nicht möglich.
+  * @return     FAILURE     Initialisierung war nicht möglich.
   *
   */
 int GuiWidget::start_gui()
@@ -586,7 +586,7 @@ int GuiWidget::start_gui()
   *         Der tatsächliche Stop erfolgt später, je nach Rechenzeit und gewählter Bildwiederholrate.
   *
   * @return     SUCCESS     Initialisierung erfolgreich.
-  *             FAILURE     Initialisierung war nicht möglich.
+  * @return     FAILURE     Initialisierung war nicht möglich.
   */
 int GuiWidget::stop_gui()
 {

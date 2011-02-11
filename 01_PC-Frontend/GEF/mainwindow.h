@@ -15,6 +15,12 @@ namespace Ui {
     class MainWindow;
 }
 
+/** @brief  Stellt die Hauptfunktionen zur Verfügung
+  *
+  *         Die Klasse stellt den Mittelpunkt der Anwendung dar. Sämtlicher Datenverkehr
+  *         läuft über das MainWindow. Zusätzlich wird die Benutzeroberfläche durch das
+  *         MainWindow erstellt und die anderen Elemente (GuiWidget, Console, etc.) eingebunden.
+  */
 class MainWindow : public QMainWindow
 {
     Q_OBJECT

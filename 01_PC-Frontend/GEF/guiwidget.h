@@ -4,6 +4,12 @@
 #include "includes.h"
 #include "defines.h"
 
+
+/** @brief  Stellt die eingehenden Daten grafisch dar.
+  *
+  *         Die Klasse stellt alle Informationen über das Schienennetz grafisch dar.
+  *         So lässt sich leicht erkennen wie die Situation auf dem Schienennetz sein sollte.
+  */
 class GuiWidget : public QWidget
 {
     Q_OBJECT
